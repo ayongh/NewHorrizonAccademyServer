@@ -1,0 +1,22 @@
+{
+  "name": "nhaserver",
+  "version": "1.0.0",
+  "description": "API for the NHA",
+  "main": "nhamain.js",
+  "scripts": {
+    "start": "nodemon --watch src src/nhamain.js"
+  },
+  "author": "Abhishek Yonghang",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.3.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.4.1",
+    "mongoose": "^5.8.6",
+    "mongose": "0.0.2-security",
+    "nodemon": "^2.0.2"
+  }
+}
