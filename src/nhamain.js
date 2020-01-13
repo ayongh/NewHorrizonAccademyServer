@@ -3,6 +3,8 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 
 //import Routes 
@@ -17,6 +19,8 @@ mongoose.connect(process.env.DB_Connection,{ useNewUrlParser: true, useUnifiedTo
 
 //Middle ware
 app.use(express.json())
+app.use(cors())
+app.use(cookieParser())
 
 //Route Middle ware
 app.use('/user/signup', user_signup);

@@ -2,6 +2,7 @@ const router = require('express').Router();
 const User = require('../model/User_model');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const generateRefreshToken = require('../validation/Generate_refreshtoken')
 
 //validation
 const { check, validationResult } = require('express-validator');
@@ -45,7 +46,7 @@ router.post('/',schema, async (req, res) =>
 
     //Create and assign web token
     const token  = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET)
-
+    await generateRefreshToken(res, user._id, user.firstname )
     //Successfully loges in
     res.header('auth-token', token).status(200).send({
         status:"Sucess",
