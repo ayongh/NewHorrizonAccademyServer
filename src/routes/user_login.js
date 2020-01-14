@@ -23,7 +23,7 @@ router.post('/',schema, async (req, res) =>
 
     if (!errors.isEmpty()) 
     {
-        return res.status(422).json({ errors: errors.array() });
+        return res.status(422).json({ errors: "Make sure your username and password is correct"});
     }
 
     //Checking email exists
@@ -44,10 +44,14 @@ router.post('/',schema, async (req, res) =>
 
 
     //Create and assign web token
-    const token  = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET)
+    const token  = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET, {expiresIn: "5 days"} )
+
+    const cookieOptions = {
+        httpOnly: true,
+    }
 
     //Successfully loges in
-    res.header('auth-token', token).status(200).send({
+    res.cookie('authToken', token, cookieOptions).status(200).send({
         status:"Sucess",
         code: 200,
         login: true,
