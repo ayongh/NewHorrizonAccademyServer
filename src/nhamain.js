@@ -41,4 +41,4 @@ app.use('/user/pswdReset', user_pswdreset);
 app.use('/token/validation', token_validation);
 app.use('/course', Course);
 
-app.listen(3001, ()=> console.log('Server running in localhost://3001/'));
+app.listen(process.env.PORT || 3001, ()=> console.log('Server running in localhost://3001/'));
