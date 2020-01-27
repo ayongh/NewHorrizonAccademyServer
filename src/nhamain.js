@@ -11,6 +11,8 @@ var cookieParser = require('cookie-parser');
 const Course = require('./routes/course');
 const user_signup = require('./routes/user_signup')
 const user_login = require('./routes/user_login')
+const token_validation = require('./routes/validatetoken')
+const user_pswdreset = require('./routes/user_pswdreset')
 
 dotenv.config();
 
@@ -35,7 +37,8 @@ app.use(cookieParser());
 //Route Middle ware
 app.use('/user/signup', user_signup);
 app.use('/user/login', user_login);
-
+app.use('/user/pswdReset', user_pswdreset);
+app.use('/token/validation', token_validation);
 app.use('/course', Course);
 
 app.listen(3001, ()=> console.log('Server running in localhost://3001/'));
