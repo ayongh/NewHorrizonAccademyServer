@@ -6,6 +6,7 @@ var jwtDecode = require('jwt-decode');
 var verify = require('../validation/verify_pswdReset_token')
 const bcrypt = require('bcryptjs');
 
+var sendVerificationCode = require('../middle_ware/varification_email')
 
 
 //validation
@@ -24,7 +25,6 @@ router.post('/',schema, async (req, res) =>
     //Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req);
 
-    console.log("hi before error")
     if (!errors.isEmpty()) 
     {
         return res.status(403).json({ errors: errors.array() });
@@ -41,7 +41,6 @@ router.post('/',schema, async (req, res) =>
 
     //Generate random number 
     var secret = speakeasy.generateSecret({length: 5});
-    console.log("email validation",secret.base32); // Save this value to your DB for the user
 
     var payload = {
         userID: user.id,
@@ -56,6 +55,7 @@ router.post('/',schema, async (req, res) =>
     }
 
     //Send email using node mailer
+    sendVerificationCode.sendVarificationCode(secret.base32, req.body.email ,res)
 
     //Successfully loges in
     res.cookie('pswdreset', token, cookieOptions).status(200).send({

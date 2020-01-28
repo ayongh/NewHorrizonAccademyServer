@@ -20,6 +20,7 @@
     "mongoose": "^5.8.6",
     "mongose": "0.0.2-security",
     "ms": "^2.1.2",
+    "nodemailer": "^6.4.2",
     "nodemon": "^2.0.2",
     "speakeasy": "^2.0.0"
   }
