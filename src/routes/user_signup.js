@@ -1,7 +1,10 @@
 const router = require('express').Router();
 const User = require('../model/User_model');
 const bcrypt = require('bcryptjs');
+var speakeasy = require('speakeasy');
 const jwt = require('jsonwebtoken');
+
+var sendVerificationCode = require('../middle_ware/varification_email')
 
 
 //validation
@@ -33,6 +36,59 @@ const schema =
    
 router.post('/', schema, async (req, res) =>
 {
+  //Lets Validate the User data
+  //Finds the validation errors in this request and wraps them in an object with handy functions
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) 
+  {
+    return res.status(403).json({ errors: errors.array() });
+  }
+
+  const match = await bcrypt.compare(req.body.userInputedCode, req.body.hasedVerifedCode);
+   
+  if(!match) {
+    return res.status(400).send({error:"Validation code doesnt match"})
+  }
+  
+  //Adds the data to the User Model
+  const userModel = new User({
+    firstName: req.body.fname,
+    lastName: req.body.lname,
+    email: req.body.email,
+    password:req.body.password
+  })
+
+  //Saves the data in the 
+  try
+  {
+    const savedUser = await userModel.save();
+
+    //Create and assign web token
+    const token  = jwt.sign({_id: savedUser._id}, process.env.TOKEN_SECRET, {expiresIn: "5 days"} )
+
+    const cookieOptions = {
+      httpOnly: true
+    }
+
+    //Successfully loges in
+    return res.cookie('authToken', token, cookieOptions).status(200).send({
+      status:"Sucess",
+      code: 200,
+      login: true,
+      token: token,
+      message:"Sucessfully Created User"
+    })
+  } 
+  catch(err)
+  {
+    return res.status(400).send(err)
+  }
+}),
+
+
+router.post('/emailvarification', schema, async (req, res) =>
+{
 
   //Lets Validate the User data
   //Finds the validation errors in this request and wraps them in an object with handy functions
@@ -44,46 +100,25 @@ router.post('/', schema, async (req, res) =>
     return res.status(403).json({ errors: errors.array() });
   }
 
+  //Generate random number 
+  var secret = speakeasy.generateSecret({length: 5});
+
   //Hash password
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(req.body.password, salt)
+  const hashedSecret = await bcrypt.hash(secret.base32, salt)
 
-  
-  //Adds the data to the User Model
-  const userModel = new User({
+  //Send email using node mailer
+  sendVerificationCode.sendVarificationCode(secret.base32, req.body.email ,res)
+
+  res.status(200).send({
     firstName: req.body.fname,
     lastName: req.body.lname,
     email: req.body.email,
-    password:hashedPassword
+    password:hashedPassword,
+    secret: hashedSecret
   })
-
-  //Saves the data in the 
-  try
-  {
-    const savedUser = await userModel.save();
-
-    //Create and assign web token
-    const token  = jwt.sign({_id: savedUser._id}, process.env.TOKEN_SECRET, {expiresIn: "5 days"} )
-
-    console.log(token)
-    const cookieOptions = {
-      httpOnly: true
-    }
-
-    //Successfully loges in
-    res.cookie('authToken', token, cookieOptions).status(200).send({
-      status:"Sucess",
-      code: 200,
-      login: true,
-      token: token,
-      message:"Sucessfully Created User"
-    })
-  } 
-  catch(err)
-  {
-    res.status(400).send(err)
-  }
-});
+})
 
 
 module.exports = router;
