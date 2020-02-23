@@ -42,20 +42,14 @@ router.post('/',schema, async (req, res) =>
         message:"user with email " + req.body.email +" password doesn't match"
     })
 
-
-    //Create and assign web token
-    const token  = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET, {expiresIn: "5d"} )
-
-    const cookieOptions = {
-        httpOnly: true
-    }
+    req.session.userID = user.id
+    req.session.loginStatus = true
 
     //Successfully loges in
-    res.cookie('authToken', token, cookieOptions).status(200).send({
+    res.status(200).send({
         status:"Sucess",
         code: 200,
         login: true,
-        token: token,
         message:"Sucessfully logeed in"
     })
 

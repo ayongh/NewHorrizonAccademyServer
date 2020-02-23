@@ -64,19 +64,14 @@ router.post('/', schema, async (req, res) =>
   {
     const savedUser = await userModel.save();
 
-    //Create and assign web token
-    const token  = jwt.sign({_id: savedUser._id}, process.env.TOKEN_SECRET, {expiresIn: "5 days"} )
-
-    const cookieOptions = {
-      httpOnly: true
-    }
+    req.session.userID = savedUser.id
+    req.session.loginStatus = true
 
     //Successfully loges in
-    return res.cookie('authToken', token, cookieOptions).status(200).send({
+    return res.status(200).send({
       status:"Sucess",
       code: 200,
       login: true,
-      token: token,
       message:"Sucessfully Created User"
     })
   } 
