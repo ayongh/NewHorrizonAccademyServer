@@ -2,9 +2,8 @@ const jwt = require('jsonwebtoken')
 
 module.exports = function (req, res, next)
 {
-    const token = req.cookies.authToken;
+    const token = req.cookies.pswdreset;
 
-    console.log("verifying")
     if (!token) return res.status(401).send({error:'Access deniened'})
 
     try

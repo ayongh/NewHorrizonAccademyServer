@@ -17,8 +17,7 @@ const schema =
 router.post('/',schema, async (req, res) =>
 {
 
-    
-    //Lets Validate the User data
+
     //Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req);
 
@@ -29,6 +28,8 @@ router.post('/',schema, async (req, res) =>
 
     //Checking email exists
     const user = await User.findOne({email:req.body.email})
+    console.log(user)
+
     if (!user) 
     {
         return res.status(404).send({
@@ -49,16 +50,15 @@ router.post('/',schema, async (req, res) =>
             message:"user with email " + req.body.email +" password doesn't match"
         })
     }
-        
-
-    const savedUser = await userModel.save();
+    
+    var currentTime = new Date()
 
     //Create and assign web token
-    const token  = jwt.sign({_id: savedUser._id}, process.env.TOKEN_SECRET, {expiresIn: "5 days"} )
+    const token  = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET, {expiresIn: "5 days"} )
 
     const cookieOptions = {
       httpOnly: true,
-      maxAge: 1000*60*24*5
+      maxAge:1000*60*60*24*5
     }
 
     //Successfully loges in
