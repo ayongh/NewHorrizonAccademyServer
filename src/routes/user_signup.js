@@ -2,7 +2,7 @@ const router = require('express').Router();
 const User = require('../model/User_model');
 const bcrypt = require('bcryptjs');
 var speakeasy = require('speakeasy');
-var verifyJWT = require('../validation/verify_token')
+var verifyJWT = require('../validation/verify_signupToken')
 const jwt = require('jsonwebtoken');
 
 var sendVerificationCode = require('../middle_ware/varification_email')
@@ -40,7 +40,7 @@ const schema =
 ]
 
    
-router.post('/', schema, async (req, res) =>
+router.post('/', schema,verifyJWT, async (req, res) =>
 {
   //Lets Validate the User data
   //Finds the validation errors in this request and wraps them in an object with handy functions
@@ -51,13 +51,20 @@ router.post('/', schema, async (req, res) =>
       return res.status(422).json({ errors: errors.array() });
   }
 
-  if( req.body.userInputedCode === undefined && req.body.hasedVerifedCode=== undefined)
+  if( req.body.userInputedCode === undefined)
   {
-    return res.status(400).send({error:"verification code is undefined"})
+    return res.status(400).send({error:"user inputed code is undefined"})
+  }
+  
+  if(req.cookies.signup=== undefined)
+  {
+    return res.status(400).send({error:"hashed user inputed code is undefined"})
   }
 
-  const match = await bcrypt.compare(req.body.userInputedCode, req.body.hasedVerifedCode);
-   
+  const decodedjwt = jwt.verify(req.cookies.signup, process.env.TOKEN_SECRET)
+
+  const match = await bcrypt.compare(req.body.userInputedCode, decodedjwt.key);
+
   if(!match) {
     return res.status(400).send({error:"Validation code doesnt match"})
   }
@@ -84,7 +91,7 @@ router.post('/', schema, async (req, res) =>
     }
 
     //Successfully loges in
-    res.cookie('authToken', token, cookieOptions).status(200).send({
+      res.cookie('authToken', token, cookieOptions).status(200).send({
       status:"Sucess",
       code: 200,
       login: true,
@@ -122,7 +129,15 @@ router.post('/emailvarification', schema, async (req, res) =>
   //Send email using node mailer
   sendVerificationCode.sendVarificationCode(secret.base32, req.body.email ,res)
 
-  res.status(200).send({
+  //Create and assign web token
+  const token  = jwt.sign({key: hashedSecret}, process.env.TOKEN_SECRET, {expiresIn: "5 days"} )
+
+  const cookieOptions = {
+    httpOnly: true,
+    maxAge:1000*60*60*10
+  }
+
+  res.cookie('signup', token, cookieOptions).status(200).send({
     firstName: req.body.fname,
     lastName: req.body.lname,
     email: req.body.email,
