@@ -77,7 +77,6 @@ router.post('/', schema, async (req, res) =>
   try
   {
     const savedUser = await userModel.save();
-<<<<<<< HEAD
 
     //Create and assign web token
     const token  = jwt.sign({_id: savedUser._id}, process.env.TOKEN_SECRET, {expiresIn: "5 days"} )
@@ -94,9 +93,6 @@ router.post('/', schema, async (req, res) =>
       login: true,
       message:"Sucessfully Created User"
     })
-=======
-    res.send(savedUser)
->>>>>>> parent of 01d55e4... First Commit
   } 
   catch(err)
   {

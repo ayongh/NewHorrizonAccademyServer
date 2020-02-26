@@ -16,7 +16,6 @@
     "express-session": "^1.17.0",
     "express-validator": "^6.3.1",
     "jsonwebtoken": "^8.5.1",
-<<<<<<< HEAD
     "jwt-decode": "^2.2.0",
     "log4js": "^6.1.2",
     "mongodb": "^3.4.1",
@@ -26,11 +25,5 @@
     "nodemailer": "^6.4.2",
     "nodemon": "^2.0.2",
     "speakeasy": "^2.0.0"
-=======
-    "mongodb": "^3.4.1",
-    "mongoose": "^5.8.6",
-    "mongose": "0.0.2-security",
-    "nodemon": "^2.0.2"
->>>>>>> parent of 01d55e4... First Commit
   }
 }

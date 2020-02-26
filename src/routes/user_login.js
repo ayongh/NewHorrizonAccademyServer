@@ -54,18 +54,11 @@ router.post('/',schema, async (req, res) =>
     const savedUser = await userModel.save();
 
     //Create and assign web token
-<<<<<<< HEAD
     const token  = jwt.sign({_id: savedUser._id}, process.env.TOKEN_SECRET, {expiresIn: "5 days"} )
 
     const cookieOptions = {
       httpOnly: true,
       maxAge: 1000*60*24*5
-=======
-    const token  = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET, {expiresIn: "5 days"} )
-
-    const cookieOptions = {
-        httpOnly: true,
->>>>>>> parent of 01d55e4... First Commit
     }
 
     //Successfully loges in
