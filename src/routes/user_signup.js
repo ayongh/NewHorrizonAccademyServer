@@ -1,15 +1,12 @@
 const router = require('express').Router();
 const User = require('../model/User_model');
 const bcrypt = require('bcryptjs');
-<<<<<<< HEAD
 var speakeasy = require('speakeasy');
 var verifyJWT = require('../validation/verify_token')
 const jwt = require('jsonwebtoken');
 
 var sendVerificationCode = require('../middle_ware/varification_email')
 
-=======
->>>>>>> parent of 01d55e4... First Commit
 
 //validation
 const { check, validationResult } = require('express-validator');
