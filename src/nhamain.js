@@ -6,8 +6,6 @@ const dotenv = require('dotenv')
 var cookieParser = require('cookie-parser');
 const session = require('express-session')
 
-
-
 //import Routes 
 const Course = require('./routes/course');
 const user_signup = require('./routes/user_signup')
@@ -36,22 +34,6 @@ mongoose.connect(process.env.DB_Connection,{ useNewUrlParser: true, useUnifiedTo
 //Middle ware
 app.use(express.json())
 app.use(cookieParser());
-
-//Session Config
-app.use(
-    session({
-        name:"authToken",
-        secret: process.env.TOKEN_SECRET,
-        resave:false,
-        saveUninitialized:false,
-        cookie:
-        {
-            httpOnly:true,
-            secure:process.env.ENV === "production",
-            maxAge: 1000*60*24 //one day
-        }
-    })
-)
 
 //Route Middle ware
 app.use('/user/signup', user_signup);

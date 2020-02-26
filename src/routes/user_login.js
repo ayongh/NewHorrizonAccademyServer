@@ -17,6 +17,7 @@ const schema =
 router.post('/',schema, async (req, res) =>
 {
 
+    
     //Lets Validate the User data
     //Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req);
@@ -28,29 +29,44 @@ router.post('/',schema, async (req, res) =>
 
     //Checking email exists
     const user = await User.findOne({email:req.body.email})
-    if (!user) return res.status(404).send({
-        status:"Error",
-        code: 404,
-        message:"user with email " + req.body.email +" doesn't exist"
-    })
-
+    if (!user) 
+    {
+        return res.status(404).send({
+            status:"Error",
+            code: 404,
+            message:"user with email " + req.body.email +" doesn't exist"
+        })
+    
+    }
+    
     //Checking Password and decryprting
     const validatePassword = await bcrypt.compare(req.body.password, user.password)
-    if(!validatePassword) return res.status(404).send({
-        status:"Error",
-        code: 404,
-        message:"user with email " + req.body.email +" password doesn't match"
-    })
+    if(!validatePassword) 
+    {
+        return res.status(404).send({
+            status:"Error",
+            code: 404,
+            message:"user with email " + req.body.email +" password doesn't match"
+        })
+    }
+        
 
-    req.session.userID = user.id
-    req.session.loginStatus = true
+    const savedUser = await userModel.save();
+
+    //Create and assign web token
+    const token  = jwt.sign({_id: savedUser._id}, process.env.TOKEN_SECRET, {expiresIn: "5 days"} )
+
+    const cookieOptions = {
+      httpOnly: true,
+      maxAge: 1000*60*24*5
+    }
 
     //Successfully loges in
-    res.status(200).send({
-        status:"Sucess",
-        code: 200,
-        login: true,
-        message:"Sucessfully logeed in"
+    res.cookie('authToken', token, cookieOptions).status(200).send({
+      status:"Sucess",
+      code: 200,
+      login: true,
+      message:"Sucessfully Created User"
     })
 
 });

@@ -3,8 +3,6 @@ let nodeMailer = require('nodemailer')
 // Send verification Code
 module.exports.sendVarificationCode = async function(token, email ,res) 
 {
-    console.log(process.env.GMAIL_USERNAME)
-
     let transporter = nodeMailer.createTransport({
         host: 'smtp.gmail.com',
         port: 465,
