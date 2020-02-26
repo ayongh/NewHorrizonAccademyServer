@@ -11,7 +11,7 @@ const { check, validationResult } = require('express-validator');
 const schema = 
 [
     check('email').not().isEmpty().withMessage('Email is required').isString().withMessage('Value can not be Number').escape().isEmail().withMessage('Invalid Email address'),
-    check('password').not().isEmpty().withMessage('password is required').isLength({ min: 8 }).withMessage('Invalid password, please review')
+    check('password').not().isEmpty().withMessage('password is required').isLength({ min: 8 }).withMessage('Invalid password, please review').isString().withMessage('Value can not be Number').escape().trim().matches(/\d/).withMessage('must contain a number')
 ]
   
 router.post('/',schema, async (req, res) =>
@@ -24,7 +24,7 @@ router.post('/',schema, async (req, res) =>
 
     if (!errors.isEmpty()) 
     {
-        return res.status(403).json({ errors: "Make sure your username and password is correct"});
+        return res.status(422).json({ errors: "Make sure your username and password is correct"});
     }
 
     //Checking email exists
@@ -54,11 +54,18 @@ router.post('/',schema, async (req, res) =>
     const savedUser = await userModel.save();
 
     //Create and assign web token
+<<<<<<< HEAD
     const token  = jwt.sign({_id: savedUser._id}, process.env.TOKEN_SECRET, {expiresIn: "5 days"} )
 
     const cookieOptions = {
       httpOnly: true,
       maxAge: 1000*60*24*5
+=======
+    const token  = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET, {expiresIn: "5 days"} )
+
+    const cookieOptions = {
+        httpOnly: true,
+>>>>>>> parent of 01d55e4... First Commit
     }
 
     //Successfully loges in

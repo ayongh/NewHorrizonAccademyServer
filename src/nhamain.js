@@ -10,11 +10,14 @@ const session = require('express-session')
 const Course = require('./routes/course');
 const user_signup = require('./routes/user_signup')
 const user_login = require('./routes/user_login')
+<<<<<<< HEAD
 const user_logout = require('./routes/user_logout')
 const token_validation = require('./routes/validatetoken')
 const user_pswdreset = require('./routes/user_pswdreset')
 const class_create = require('./routes/create_course')
 const section_create = require('./routes/create_section')
+=======
+>>>>>>> parent of 01d55e4... First Commit
 
 dotenv.config();
 
@@ -38,9 +41,13 @@ app.use(cookieParser());
 //Route Middle ware
 app.use('/user/signup', user_signup);
 app.use('/user/login', user_login);
+<<<<<<< HEAD
 app.use('/user/logout', user_logout);
 app.use('/user/pswdReset', user_pswdreset);
 app.use('/token/validation', token_validation);
+=======
+
+>>>>>>> parent of 01d55e4... First Commit
 app.use('/course', Course);
 app.use('/class', class_create);
 app.use('/section', section_create);
