@@ -1,4 +1,6 @@
 const router = require('express').Router();
+const axios = require('axios');
+
 const User = require('../model/User_model');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -17,7 +19,6 @@ const schema =
 router.post('/',schema, async (req, res) =>
 {
 
-
     //Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req);
 
@@ -28,31 +29,29 @@ router.post('/',schema, async (req, res) =>
 
     //Checking email exists
     const user = await User.findOne({email:req.body.email})
-    console.log(user)
 
     if (!user) 
     {
         return res.status(404).send({
             status:"Error",
             code: 404,
-            message:"user with email " + req.body.email +" doesn't exist"
+            errors:"user with email " + req.body.email +" doesn't exist"
         })
     
     }
     
     //Checking Password and decryprting
     const validatePassword = await bcrypt.compare(req.body.password, user.password)
+
     if(!validatePassword) 
     {
         return res.status(404).send({
             status:"Error",
             code: 404,
-            message:"user with email " + req.body.email +" password doesn't match"
+            errors:"user with email " + req.body.email +" password doesn't match"
         })
     }
     
-    var currentTime = new Date()
-
     //Create and assign web token
     const token  = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET, {expiresIn: "5 days"} )
 
@@ -70,6 +69,29 @@ router.post('/',schema, async (req, res) =>
     })
 
 });
+
+
+router.post('/recaptcha', async (req, res) =>
+{
+    let APIURL = "https://www.google.com/recaptcha/api/siteverify?secret="+process.env.RECAPTCHA_SECRETKEY+"&response="+req.body.token
+    axios.get(APIURL).then(response => {
+        if(response.data.success && response.data.score > 0.4)
+        {
+            return res.status(200).send({
+                status:"success",
+                login:true
+            })
+        }
+        else
+        {
+            return res.status(500).send({
+                status:"Failure",
+                login:false
+            })
+
+        }
+    })
+})
 
 
 module.exports = router;

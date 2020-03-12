@@ -4,7 +4,6 @@ module.exports = function (req, res, next)
 {
     const token = req.cookies.authToken;
 
-    console.log("verifying")
     if (!token) return res.status(401).send({error:'Access deniened'})
 
     try
