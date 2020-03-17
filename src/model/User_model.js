@@ -29,6 +29,12 @@ const UserSchema = new mongoose.Schema({
         max: 20
     },
 
+    watchHistory:
+    {
+        type:Array,
+        default:[]
+    },
+
     date:
     {
         type:Date,

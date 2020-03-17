@@ -43,6 +43,7 @@ router.post('/',schema, async (req, res) =>
     //Checking Password and decryprting
     const validatePassword = await bcrypt.compare(req.body.password, user.password)
 
+    console.log(validatePassword)
     if(!validatePassword) 
     {
         return res.status(404).send({
@@ -75,6 +76,7 @@ router.post('/recaptcha', async (req, res) =>
 {
     let APIURL = "https://www.google.com/recaptcha/api/siteverify?secret="+process.env.RECAPTCHA_SECRETKEY+"&response="+req.body.token
     axios.get(APIURL).then(response => {
+        console.log(response.data)
         if(response.data.success && response.data.score > 0.4)
         {
             return res.status(200).send({

@@ -5,15 +5,14 @@ const Section = require('../model/section_model')
 
 
 
-router.get('/all', async(req, res) =>{
+router.post('/all',verify, async(req, res) =>{
 
-    const allClass = await Class.find()
+    const allClass = await Class.find().limit(req.body.limit)
     res.status(200).send({data:allClass})
     
 })
 
-
-router.get('/recomended', async (req, res) =>{
+router.get('/recomended',verify, async (req, res) =>{
 
     const recommendedClass = await Class.find().limit(3).skip(0)
     res.status(200).send({data:recommendedClass})
@@ -21,7 +20,15 @@ router.get('/recomended', async (req, res) =>{
 })
 
 
-router.get('/findSection/:classID', async (req, res) =>{
+router.get('/similar',verify, async (req, res) =>{
+
+    const recommendedClass = await Class.find().limit(3).skip(0)
+    res.status(200).send({data:recommendedClass})
+    
+})
+
+
+router.get('/findSection/:classID',verify, async (req, res) =>{
 
     const classInfo = req.params.classID
 
@@ -32,7 +39,7 @@ router.get('/findSection/:classID', async (req, res) =>{
 })
 
 
-router.get('/searchCourse/:categorie', async(req, res) =>{
+router.get('/searchCourse/:categorie',verify, async(req, res) =>{
 
     const categorieinfo = req.params.categorie
 
@@ -42,7 +49,7 @@ router.get('/searchCourse/:categorie', async(req, res) =>{
     
 })
 
-router.get('/search/:content', async(req, res) =>{
+router.get('/search/:content',verify, async(req, res) =>{
 
     const categorieinfo = req.params.content
 

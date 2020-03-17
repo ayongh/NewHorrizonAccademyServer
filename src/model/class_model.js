@@ -23,6 +23,17 @@ const ClassSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    director:
+    {
+        type: String,
+        required: true,
+    },
+    actors:
+    {
+        type: String,
+        required: true,
+    },
+
     like:
     {
         type: Array

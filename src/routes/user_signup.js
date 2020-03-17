@@ -91,7 +91,7 @@ router.post('/', schema,verifyJWT, async (req, res) =>
     }
 
     //Successfully loges in
-      res.cookie('authToken', token, cookieOptions).status(200).send({
+      res.clearCookie("signup").cookie('authToken', token, cookieOptions).status(200).send({
       status:"Sucess",
       code: 200,
       login: true,
