@@ -4,7 +4,6 @@ const app = express();
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 var cookieParser = require('cookie-parser');
-const session = require('express-session')
 
 //import Routes 
 const Course = require('./routes/course');
@@ -15,6 +14,7 @@ const token_validation = require('./routes/validatetoken')
 const user_pswdreset = require('./routes/user_pswdreset')
 const class_create = require('./routes/create_course')
 const section_create = require('./routes/create_section')
+const user_info = require('./routes/user_info')
 
 dotenv.config();
 
@@ -40,9 +40,12 @@ app.use('/user/signup', user_signup);
 app.use('/user/login', user_login);
 app.use('/user/logout', user_logout);
 app.use('/user/pswdReset', user_pswdreset);
+app.use('/user/info', user_info);
+
 app.use('/token/validation', token_validation);
 app.use('/course', Course);
 app.use('/class', class_create);
 app.use('/section', section_create);
 
-app.listen(process.env.PORT || 3001, ()=> console.log('Server running in localhost://3001/'));
+const server = app.listen(process.env.PORT || 3001, ()=> console.log('Server running in localhost://3001/'));
+server.keepAliveTimeout = 61*1000;

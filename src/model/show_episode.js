@@ -24,6 +24,18 @@ const sectionSchema = new mongoose.Schema({
         required: true
     },
 
+    season:
+    {
+        type: Number,
+        required: true
+    },
+
+    episode:
+    {
+        type: Number,
+        required: true
+    },
+
     videoUrl:
     {
         type: String,

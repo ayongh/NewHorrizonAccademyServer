@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const verify = require('../validation/verify_token')
 var jwtDecode = require('jwt-decode');
-const Section = require('../model/section_model');
+const Section = require('../model/show_episode');
 
 
 

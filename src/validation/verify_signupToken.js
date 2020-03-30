@@ -13,7 +13,7 @@ module.exports = function (req, res, next)
         next()
     }catch(err)
     {
-        res.status(400).send({error:'invalid Token'})
+        res.status(400).send({error:'invalid signup Token'})
     }
 
 }

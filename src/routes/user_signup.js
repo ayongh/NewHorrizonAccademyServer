@@ -83,7 +83,7 @@ router.post('/', schema,verifyJWT, async (req, res) =>
     const savedUser = await userModel.save();
 
     //Create and assign web token
-    const token  = jwt.sign({_id: savedUser._id}, process.env.TOKEN_SECRET, {expiresIn: "5 days"} )
+    const token  = jwt.sign({_id: savedUser._id}, process.env.TOKEN_SECRET, {expiresIn: "1 days"} )
 
     const cookieOptions = {
       httpOnly: true,

@@ -1,14 +1,14 @@
 const router = require('express').Router();
 const verify = require('../validation/verify_token')
 const Class = require('../model/class_model');
-const Section = require('../model/section_model')
+const Section = require('../model/show_episode')
 
 
 
-router.post('/all',verify, async(req, res) =>{
+router.get('/all',verify, async(req, res) =>{
 
-    const allClass = await Class.find().limit(req.body.limit)
-    res.status(200).send({data:allClass})
+    const allClass = await Class.find()
+    res.status(200).send({classes:allClass})
     
 })
 
@@ -33,6 +33,8 @@ router.get('/findSection/:classID',verify, async (req, res) =>{
     const classInfo = req.params.classID
 
     const SectionInfo = await Section.find({classID:classInfo})
+
+    console.log(SectionInfo)
 
     res.status(200).send({data: SectionInfo})
     
