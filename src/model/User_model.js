@@ -35,6 +35,18 @@ const UserSchema = new mongoose.Schema({
         default:[]
     },
 
+    like:
+    {
+        type:Array,
+        default:[]
+    },
+
+    dislike:
+    {
+        type:Array,
+        default:[]
+    },
+
     date:
     {
         type:Date,

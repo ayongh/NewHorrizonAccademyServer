@@ -32,17 +32,6 @@ const ClassSchema = new mongoose.Schema({
     {
         type: String,
         required: true,
-    },
-
-    like:
-    {
-        required: false,
-        type: Array
-    },
-    dislike:
-    {
-        required: false,
-        type: Array
     }
 
 });
