@@ -15,6 +15,8 @@ const user_pswdreset = require('./routes/user_pswdreset')
 const class_create = require('./routes/create_course')
 const section_create = require('./routes/create_section')
 const user_info = require('./routes/user_info')
+const WelcomePage = require('./routes/welcome')
+
 
 dotenv.config();
 
@@ -36,6 +38,7 @@ app.use(express.json())
 app.use(cookieParser());
 
 //Route Middle ware
+app.use('/', WelcomePage);
 app.use('/user/signup', user_signup);
 app.use('/user/login', user_login);
 app.use('/user/logout', user_logout);
