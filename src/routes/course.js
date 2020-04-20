@@ -5,7 +5,7 @@ var jwtDecode = require('jwt-decode');
 const Class = require('../model/class_model');
 const Section = require('../model/show_episode')
 const User = require('../model/User_model');
-
+const Rating = require('../model/rating_model')
 
 
 router.get('/all',verify, async(req, res) =>{
@@ -36,9 +36,7 @@ router.get('/findSection/:classID',verify, async (req, res) =>{
     const classInfo = req.params.classID
 
     const SectionInfo = await Section.find({classID:classInfo})
-
-    console.log(SectionInfo)
-
+    
     res.status(200).send({data: SectionInfo})
     
 })
@@ -84,32 +82,40 @@ router.post('/like',verify, async(req, res) =>{
         return res.status(404).send({error: "User not found "})
     }
 
-    var currentUserLike = user.like
+    var ratingExist = await Rating.findOne({userID:user._id, classID:classID})
 
-    if(currentUserLike !== undefined){
+    console.log(ratingExist)
+    var RatingMovieRes ="";
 
-        for(var i = 0; i<= currentUserLike.length; i++)
+    if(ratingExist === null)
+    {
+        var RatingMovie = new Rating({
+            userID: user._id,
+            classID: classID,
+            rating: 1 
+        })
+        RatingMovieRes = await RatingMovie.save();
+    }else
+    {
+        if(ratingExist.rating<0)
         {
-            if( currentUserLike[i] === classID)
-            {
-                return res.status(400).send({error: "Class ID is already liked by user"})
-                break
-            }
+            var query = {"userID":user._id, "classID":classID}
+            var data = { "rating" : 1 }
+            RatingMovieRes = await Rating.updateOne(query,{ $set:data });
         }
+        else
+        {
+           return res.status(404).send({error:"user already liked the movie"})
+        }
+
     }
 
-
-    currentUserLike.push(classID)
-
-    const updatedLIkeuser = await User.updateOne({_id:decoded._id}, {like: currentUserLike})
-
-    const Newuser = await User.findOne({_id:decoded._id})
-    res.status(200).send({data:Newuser})
-    
+    res.status(200).send({message:RatingMovieRes, status:"like" })    
 })
 
 router.post('/dislike',verify, async(req, res) =>{
 
+   
     const classID = req.body.classID
     var token = req.cookies.authToken;
 
@@ -127,35 +133,60 @@ router.post('/dislike',verify, async(req, res) =>{
         return res.status(404).send({error: "User not found "})
     }
 
-    var currentUserdisLike = user.dislike
+    var ratingExist = await Rating.findOne({userID:user._id, classID:classID})
 
-    if(currentUserdisLike !== undefined){
+    var RatingMovieRes ="";
 
-        for(var i = 0; i<= currentUserdisLike.length; i++)
+    if(ratingExist === null)
+    {
+        var RatingMovie = new Rating({
+            userID: user._id,
+            classID: classID,
+            rating: -1 
+        })
+        RatingMovieRes = await RatingMovie.save();
+    }else
+    {
+        if(ratingExist.rating>0)
         {
-            if( currentUserdisLike[i] === classID)
-            {
-                return res.status(400).send({error: "Class ID is already liked by user"})
-                break
-            }
+            var query = {"userID":user._id, "classID":classID}
+            var data = { "rating" : -1 }
+            RatingMovieRes = await Rating.updateOne(query,{ $set:data });
         }
+        else
+        {
+           return res.status(404).send({error:"user already disliked the movie"})
+        }
+
     }
 
-
-    currentUserdisLike.push(classID)
-
-    const updatedLIkeuser = await User.updateOne({_id:decoded._id}, {dislike: currentUserdisLike})
-
-    const Newuser = await User.findOne({_id:decoded._id})
-
-    res.status(200).send({data:Newuser})
+    res.status(200).send({message:RatingMovieRes, status:"dislike" })    
     
 })
 
 
+router.get('/listrating',verify, async(req, res) =>{
 
+    var token = req.cookies.authToken;
 
+    var decoded = jwtDecode(token);
 
+    const user = await User.findOne({_id:decoded._id})
+    
+    if(!user)
+    {
+        return res.status(404).send({error: "User not found "})
+    }
+
+    var ratingExist = await Rating.find({userID:user._id})
+
+    if(ratingExist.length <= 0)
+    {
+        return res.status(404).send({error: "No rating found"})
+    }
+
+    res.status(200).send({message: ratingExist})
+})
 
 
 module.exports = router;

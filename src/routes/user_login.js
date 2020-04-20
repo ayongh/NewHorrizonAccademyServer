@@ -73,25 +73,30 @@ router.post('/',schema, async (req, res) =>
 
 router.post('/recaptcha', async (req, res) =>
 {
-    let APIURL = "https://www.google.com/recaptcha/api/siteverify?secret="+process.env.RECAPTCHA_SECRETKEY+"&response="+req.body.token
-    axios.get(APIURL).then(response => {
+    try{
+        let APIURL = "https://www.google.com/recaptcha/api/siteverify?secret="+process.env.RECAPTCHA_SECRETKEY+"&response="+req.body.token
+        axios.get(APIURL).then(response => {
 
-        if(response.data.success && response.data.score > 0.4)
-        {
-            return res.status(200).send({
-                status:"success",
-                login:true
-            })
-        }
-        else
-        {
-            return res.status(500).send({
-                status:"Failure",
-                login:false
-            })
+            if(response.data.success && response.data.score > 0.4)
+            {
+                return res.status(200).send({
+                    status:"success",
+                    login:true
+                })
+            }
+            else
+            {
+                return res.status(500).send({
+                    status:"Failure",
+                    login:false
+                })
 
-        }
-    })
+            }
+        })
+    }catch(e)
+    {
+        console.log(e)
+    }
 })
 
 

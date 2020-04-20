@@ -1,6 +1,4 @@
 const router = require('express').Router();
-const verify = require('../validation/verify_token')
-var jwtDecode = require('jwt-decode');
 const Section = require('../model/show_episode');
 
 
@@ -13,6 +11,8 @@ router.get('/create', async(req, res) =>{
         name: "something",
         description: "description of something",
         thumbnail:"urk",
+        season:1,
+        episode:2,
         videoUrl:"video url"
     })
 

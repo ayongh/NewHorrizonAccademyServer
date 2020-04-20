@@ -73,7 +73,7 @@
                 -moz-box-shadow: 9px 10px 12px -1px rgba(0,0,0,0.68);
                 box-shadow: 9px 10px 12px -1px rgba(0,0,0,0.68);
                 background:goldenrod;
-                
+
             }
 
             .Description_welcome
@@ -99,6 +99,31 @@
             {
                 width: 100%;
             }
+
+            .collapsible {
+                background-color: #777;
+                color: white;
+                cursor: pointer;
+                padding: 18px;
+                width: 100%;
+                border: none;
+                text-align: left;
+                outline: none;
+                font-size: 15px;
+            }
+
+            .content {
+                padding: 0 18px;
+                display: none;
+                overflow: hidden;
+                background-color: #f1f1f1;
+            }
+
+            .codefont{
+                font-family: monospace;
+                font: outline;
+                font-size: medium;
+            }
         </style>
     </head>
     <body>
@@ -119,9 +144,9 @@
                     <div class="container">
                         <ul class="nav nav-tabs">
                           <li class="active"><a href="#home">Home</a></li>
-                          <li><a href="#menu1">Menu 1</a></li>
-                          <li><a href="#menu2">Menu 2</a></li>
-                          <li><a href="#menu3">Menu 3</a></li>
+                          <li><a href="#menu1">Routes</a></li>
+                          <li><a href="#menu2">Postman Collection</a></li>
+                          <li><a href="#menu3">Implemting NHA Routes</a></li>
                         </ul>
                       
                         <div class="tab-content">
@@ -130,8 +155,26 @@
                             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                           </div>
                           <div id="menu1" class="tab-pane fade">
-                            <h3>Menu 1</h3>
-                            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                            <h3>Routes</h3>
+                            <p>This contains the routes of current API</p>
+
+                            <button type="button" class="collapsible">Login</button>
+                            <div class="content">
+                                <p>allows you to login to the page with following credentials.</p>
+                                <h4>Request</h4>
+                                <p class="codefont" id="loginCredential"></p>
+                                <h4>Result</h4>
+                                <p class="codefont" id="loginResult"></p>
+
+                            </div>
+                            <button type="button" class="collapsible">Open Section 2</button>
+                            <div class="content">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                            </div>
+                            <button type="button" class="collapsible">Open Section 3</button>
+                            <div class="content">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                            </div>
                           </div>
                           <div id="menu2" class="tab-pane fade">
                             <h3>Menu 2</h3>
@@ -153,6 +196,41 @@
                 $(this).tab('show');
               });
             });
+
+            var coll = document.getElementsByClassName("collapsible");
+            var i;
+
+            for (i = 0; i < coll.length; i++) {
+                coll[i].addEventListener("click", function() {
+                    this.classList.toggle("active");
+                    var content = this.nextElementSibling;
+                    if (content.style.display === "block") {
+                    content.style.display = "none";
+                    } else {
+                    content.style.display = "block";
+                    }
+                });
+            }
+
+            var loginCredential = {
+                "email": "something@gmail.com",
+                "password":"XXXXXXXXXXXX"
+            }
+            document.getElementById("loginCredential").innerHTML = JSON.stringify(loginCredential, undefined, 1);
+
+            var loginResult = {
+                "email": "something@gmail.com",
+                "password":"passwordEncrypeted",
+                "watchHistory": 
+                {
+                    0:"classID"
+                },
+                "like":{
+                    0:"classID"
+                }
+            }
+            document.getElementById("loginResult").innerHTML = JSON.stringify(loginResult, undefined, 1);
+
         </script>
             
     </body>

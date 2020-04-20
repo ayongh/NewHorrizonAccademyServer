@@ -117,7 +117,9 @@ router.post('/updatePswd',verify,passwordschema, async (req, res) =>
     
     User.updateOne(query,{password: hashedPassword}, function(err, result)
     {
-        if(err) return res.status(401).send({error:"failed to update the password"})
+        if(err){ 
+            return res.status(401).send({error:"failed to update the password"})
+        }
     })
 
     res.clearCookie("pswdreset").status(200).send({ message: "Sucessfully updated password"})

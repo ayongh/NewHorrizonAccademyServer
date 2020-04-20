@@ -3,6 +3,7 @@ let nodeMailer = require('nodemailer')
 // Send verification Code
 module.exports.sendVarificationCode = async function(token, email ,res) 
 {
+    
     let transporter = nodeMailer.createTransport({
         host: 'smtp.gmail.com',
         port: 465,
@@ -12,7 +13,7 @@ module.exports.sendVarificationCode = async function(token, email ,res)
             user: process.env.GMAIL_USERNAME,
             pass: process.env.GMAIL_PASSWORD
         }
-    });
+    })
 
     let mailOptions = {
         to: email,
@@ -25,4 +26,7 @@ module.exports.sendVarificationCode = async function(token, email ,res)
             return res.status(401).send({error:"failed to send email"})
         }
     });
+    
+   
+    
 }

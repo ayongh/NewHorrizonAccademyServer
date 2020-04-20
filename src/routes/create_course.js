@@ -9,10 +9,12 @@ router.get('/create',verify, async(req, res) =>{
 
     //Adds the data to the User Model
     const classModel = new Class({
-        name: req.body.name,
-        description: req.body.description,
-        thumbnail: req.body.thumbnail,
-        like: req.body.like
+        name: "Test Data",
+        description: "Something about the Test data",
+        thumbnail: "https://drive.google.com/uc?id=1eO2vzGAsQRrzcKVxkoXixK1z5uEyQ8ir",
+        categorie:"movie",
+        director: "Abhishek Yonghang",
+        actors:"Abhishek, john"
     })
 
     const savedClass = await classModel.save();

@@ -16,6 +16,7 @@ const class_create = require('./routes/create_course')
 const section_create = require('./routes/create_section')
 const user_info = require('./routes/user_info')
 const WelcomePage = require('./routes/welcome')
+const Recomendation = require('./routes/recomendation')
 
 
 dotenv.config();
@@ -46,6 +47,8 @@ app.use('/user/pswdReset', user_pswdreset);
 app.use('/user/info', user_info);
 
 app.use('/token/validation', token_validation);
+app.use('/recomendation',Recomendation);
+
 app.use('/course', Course);
 app.use('/class', class_create);
 app.use('/section', section_create);

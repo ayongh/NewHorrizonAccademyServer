@@ -11,6 +11,10 @@ const ClassSchema = new mongoose.Schema({
         type:String,
         required: true,
     },
+    tag:
+    {
+        type:String,
+    },
 
     thumbnail:
     {
