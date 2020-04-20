@@ -24,11 +24,16 @@ dotenv.config();
 
 //Core Config: Make sure To investigate more
 app.use(function(req, res, next) {
-res.header("Access-Control-Allow-Origin",process.env.ORIGIN);   //https://nhaclient.herokuapp.com  //http://localhost:3000 
-res.header("Access-Control-Allow-Credentials", "true");
-res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-next();
+    var allowedOrigin = ['https://nhaclient.herokuapp.com','http://localhost:3000', 'http://nhaclient.herokuapp.com']
+    var headersReq = req.headers.origin;
+    if(allowedOrigin.indexOf(headersReq) > -1)
+    {
+        res.header("Access-Control-Allow-Origin", headersReq);
+    }
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
 });
 
 //connect to DB
