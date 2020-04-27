@@ -27,13 +27,24 @@ module.exports.log = function (req,res,status,message,payload, starttime) {
             level ="Error"
         }
         
+        
         var datasize = jsonSize(payload) + " bytes"
         var Message = message
         var method = req.method
         var route = req.originalUrl
         var time =  process.hrtime(starttime)
         var executiontime = time[0] +'s ' +( time[1] / 1000000) +'ms'
-        var identifier = req.cookie;
+        var identifier = req.cookies.authToken;
+
+        if(identifier === undefined)
+        {
+            identifier = req.body.email
+        }
+
+        if(identifier === undefined)
+        {
+            identifier = "recaptchaToken " + req.body.token
+        }
 
         if(route === "/user/login")
         {
@@ -49,6 +60,8 @@ module.exports.log = function (req,res,status,message,payload, starttime) {
 
         }
 
+        
+
         var logData = 
         {   
             timestamp:date,
@@ -56,7 +69,6 @@ module.exports.log = function (req,res,status,message,payload, starttime) {
             message:Message, 
             reqHeader:req.headers, 
             identifier:identifier, 
-            connectionIP:req.ip, 
             method:method, 
             route: route, 
             size:datasize, 
@@ -66,7 +78,7 @@ module.exports.log = function (req,res,status,message,payload, starttime) {
         dbo.collection("log").insertOne(logData, function(err, res) {
             if (err) throw err;
             console.log("1 document inserted");
-          });
+        });
         
             
     })
