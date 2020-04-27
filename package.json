@@ -11,20 +11,28 @@
   "dependencies": {
     "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.4",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "express-validator": "^6.3.1",
+    "json-size": "^1.0.0",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^2.2.0",
     "log4js": "^6.1.2",
-    "mongodb": "^3.4.1",
+    "mongodb": "^3.5.6",
     "mongoose": "^5.8.6",
+    "mongoose-to-swagger": "^1.0.3",
     "mongose": "0.0.2-security",
     "ms": "^2.1.2",
     "nodemailer": "^6.4.2",
     "nodemon": "^2.0.2",
-    "speakeasy": "^2.0.0"
+    "speakeasy": "^2.0.0",
+    "swagger-jsdoc": "^4.0.0",
+    "swagger-ui-express": "^4.1.4"
+  },
+  "devDependencies": {
+    "express-swagger-generator": "^1.1.17"
   }
 }

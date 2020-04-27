@@ -21,6 +21,8 @@ const schema =
   
 router.post('/',schema, async (req, res) =>
 {
+    var starttime = process.hrtime();
+
     //Lets Validate the User data
     //Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req);

@@ -7,9 +7,44 @@ const jwt = require('jsonwebtoken');
 
 //validation
 const { check, validationResult } = require('express-validator');
+var loger = require('../logger/logger');
+
+/**
+ * @typedef LoginCredentials
+ * @property {string} email.required
+ * @property {string} password.required
+*/
+
+ 
+
+/**
+ * @typedef loginSucessMessage
+ * @property {Array.<string>} watchHistory
+ * @property {string} firstName - Abhishek 
+ * @property {string} lastName - Yonghang
+ * @property {string} email - something@gmail.com
+*/
 
 
-//Validation middle ware
+/**
+ * @typedef LoginSucess
+ * @property {string} status - success - eg:123
+ * @property {integer} code - 200
+ * @property {loginSucessMessage.model} message
+*/
+
+
+/**
+ * 
+ * This function comment is parsed by doctrine
+ * @route POST /user/login
+ * @group Login - All the Login Operation
+ * @param {LoginCredentials.model} LoginCredentials.body.required - the new point
+ * @produces application/json application/xml
+ * @consumes application/json application/xml
+ * @returns {LoginSucess.model} 200 - Return user data with a login Auth in cookie
+ * @security JWT
+*/
 const schema = 
 [
     check('email').not().isEmpty().withMessage('Email is required').isString().withMessage('Value can not be Number').escape().isEmail().withMessage('Invalid Email address'),
@@ -18,84 +53,152 @@ const schema =
   
 router.post('/',schema, async (req, res) =>
 {
+    try {
 
-    //Finds the validation errors in this request and wraps them in an object with handy functions
-    const errors = validationResult(req);
+        var starttime = process.hrtime();
 
-    if (!errors.isEmpty()) 
-    {
-        return res.status(422).json({ errors: "Make sure your username and password is correct"});
+        //Finds the validation errors in this request and wraps them in an object with handy functions
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) 
+        {
+            var payload = { 
+                status:"Error",
+                errorcode:422,
+                errors: "Failed to meet the email and password constraints"}
+            loger.log(req,res,422,payload.errors,payload, starttime)
+            return res.status(422).send(payload);
+        }
+
+
+        //Checking email exists
+        const user = await User.findOne({email:req.body.email})
+
+        if (!user) 
+        {
+            var payload ={
+                status:"Error",
+                errorcode: 403,
+                errors:"user with email " + req.body.email +" doesn't exist"
+            }
+            loger.log(req,res,payload.errorcode,payload.errors,payload, starttime)
+            return res.status(403).send(payload)
+        }
+        
+        //Checking Password and decryprting
+        const validatePassword = await bcrypt.compare(req.body.password, user.password)
+
+        if(!validatePassword) 
+        {
+            var payload ={
+                status:"Error",
+                errorcode: 403,
+                errors:"user with email " + req.body.email +" password doesn't match"
+            }
+            loger.log(req,res,payload.errorcode,payload.errors,payload, starttime)
+            return res.status(403).send(payload)
+        }
+        
+        //Create and assign web token
+        const token  = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET, {expiresIn: "5 days"} )
+
+        const cookieOptions = {
+            httpOnly: true,
+            maxAge:1000*60*60*24*5
+        }
+
+        //Successfully loges in
+        var payload = {
+            status:"Sucess",
+            code: 200,
+            login: true,
+            message:{
+                watchHistory: user.watchHistory,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email
+            }
+        }
+
+        loger.log(req,res,200,{message:"sucessfully loged in", cookie:token},payload, starttime)
+        res.cookie('authToken', token, cookieOptions).status(200).send(payload)
+        
+    } catch (error) {
+
+        loger.log(req,res,500,error,payload, starttime)
+        res.status(500).send({error:"Fatal error has occured"})
     }
-
-    //Checking email exists
-    const user = await User.findOne({email:req.body.email})
-
-    if (!user) 
-    {
-        return res.status(404).send({
-            status:"Error",
-            code: 404,
-            errors:"user with email " + req.body.email +" doesn't exist"
-        })
     
-    }
-    
-    //Checking Password and decryprting
-    const validatePassword = await bcrypt.compare(req.body.password, user.password)
-
-    if(!validatePassword) 
-    {
-        return res.status(404).send({
-            status:"Error",
-            code: 404,
-            errors:"user with email " + req.body.email +" password doesn't match"
-        })
-    }
-    
-    //Create and assign web token
-    const token  = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET, {expiresIn: "5 days"} )
-
-    const cookieOptions = {
-      httpOnly: true,
-      maxAge:1000*60*60*24*5
-    }
-
-    //Successfully loges in
-    res.cookie('authToken', token, cookieOptions).status(200).send({
-      status:"Sucess",
-      code: 200,
-      login: true,
-      message:user
-    })
 
 });
 
 
+/**
+ * @typedef recaptchaCredential
+ * @property {string} token.required
+*/
+
+/**
+ * @typedef recaptchaSucessResult
+ * @property {string} message
+ * @property {integer} code
+ * @property {boolean} login
+*/
+
+/**
+ * This function comment is parsed by doctrine
+ * @route POST /user/login/recaptcha
+ * @group Login - All the Login Operation
+ * @param {recaptchaCredential.model} token.body.required - the new point
+ * @produces application/json application/xml
+ * @consumes application/json application/xml
+ * @returns {recaptchaSucessResult.model} 200 - Returns if the user making this request is Human or Bot
+ * @security JWT
+*/
 router.post('/recaptcha', async (req, res) =>
 {
+    if(req.body.token === undefined)
+    {
+        var payload= {
+            error:"Token from recaptcha is required to validate the human",
+            code: 417,
+            login:false
+        }
+        loger.log(req,res,417, payload.error,payload,starttime)
+        return res.status(417).send(payload)
+    }
     try{
+        var starttime = process.hrtime();
+
         let APIURL = "https://www.google.com/recaptcha/api/siteverify?secret="+process.env.RECAPTCHA_SECRETKEY+"&response="+req.body.token
         axios.get(APIURL).then(response => {
 
             if(response.data.success && response.data.score > 0.4)
             {
-                return res.status(200).send({
-                    status:"success",
+                var payload = {
+                    message:"successfuly varified human",
+                    code:200,
                     login:true
-                })
+                }
+                loger.log(req,res,200,{message:"sucessfully validated recaptcha token", score:response.data.score},payload,starttime)
+                return res.status(200).send(payload)
             }
             else
             {
-                return res.status(500).send({
-                    status:"Failure",
+                var payload= {
+                    error:"Malicious intent identified",
+                    code: 417,
                     login:false
-                })
+                }
+                loger.log(req,res,417,payload.error,payload,starttime)
+                return res.status(417).send(payload)
 
             }
         })
     }catch(e)
     {
-        console.log(e)
+        var payload=null
+        loger.log(req,res,500,{message:e, location:"error catch during recaptcha axios service"},payload,starttime)
     }
 })
 

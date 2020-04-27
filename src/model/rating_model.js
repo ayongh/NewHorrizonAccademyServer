@@ -4,13 +4,13 @@ const ratingSchema = new mongoose.Schema({
     userID:
     {
         type:String,
-        required:true,
+        required:true
     },
 
     classID:
     {
         type:String,
-        required: true,
+        required: true
     },
 
     rating:
