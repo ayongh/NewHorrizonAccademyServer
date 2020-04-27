@@ -32,7 +32,7 @@ let options = {
             title: 'Swagger',
             version: '1.0.0',
         },
-        host: 'nhaclient.herokuapp.com',
+        host: 'nhaserver.herokuapp.com',
         basePath: '/',
         produces: [
             "application/json",
