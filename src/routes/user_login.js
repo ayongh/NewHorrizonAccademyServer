@@ -70,7 +70,15 @@ router.post('/',schema, async (req, res) =>
             return res.status(422).send(payload);
         }
 
-
+        if(req.body.email === undefined || req.body.password === undefined)
+        {
+            var payload = { 
+            status:"Error",
+            errorcode:422,
+            errors: "email and passsowrd is required"}
+            loger.log(req,res,422,payload.errors,payload, starttime)
+            return res.status(422).send(payload);
+        }
         //Checking email exists
         const user = await User.findOne({email:req.body.email})
 
