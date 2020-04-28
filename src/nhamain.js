@@ -22,6 +22,7 @@ const user_info = require('./routes/user_info')
 const WelcomePage = require('./routes/welcome')
 const Recomendation = require('./routes/recomendation')
 var sendError = require('./middle_ware/emailError')
+var Log = require("./routes/log")
 
 
 dotenv.config();
@@ -32,7 +33,7 @@ let options = {
             title: 'Swagger',
             version: '1.0.0',
         },
-        host: 'nhaserver.herokuapp.com',
+        host: 'localhost:3001',
         basePath: '/',
         produces: [
             "application/json",
@@ -100,6 +101,7 @@ app.use('/recomendation',Recomendation);
 app.use('/course', Course);
 app.use('/class', class_create);
 app.use('/section', section_create);
+app.use('/log', Log);
 
 const server = app.listen(process.env.PORT || 3001, ()=> {
     console.log('Server running in localhost://3001/')
