@@ -62,7 +62,7 @@ app.use(bodyParser.json())
 
 //Core Config: Make sure To investigate more
 app.use(function(req, res, next) {
-    var allowedOrigin = ['https://nhaclient.herokuapp.com','http://localhost:3000', 'http://nhaclient.herokuapp.com']
+    var allowedOrigin = ['https://nhaclient.herokuapp.com','https://ancient-plateau-56456.herokuapp.com','http://localhost:3000', 'http://nhaclient.herokuapp.com']
     var headersReq = req.headers.origin;
     if(allowedOrigin.indexOf(headersReq) > -1)
     {
