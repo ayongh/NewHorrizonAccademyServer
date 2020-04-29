@@ -222,7 +222,7 @@ router.post('/like',verify, async(req, res) =>{
     }
 
     var payload = {message:RatingMovieRes, status:"like" }
-    loger.log(req,res,404,"Sucessfully liked a class", payload,starttime)
+    loger.log(req,res,200,"Sucessfully liked a class", payload,starttime)
     res.status(200).send()    
 })
 
