@@ -111,14 +111,15 @@ router.post('/',schema, async (req, res) =>
         const token  = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET, {expiresIn: "5 days"} )
 
         const cookieOptions = {
+            domain:".localhost:3000",
             httpOnly: true,
-            maxAge:1000*60*60*24*5,
-            domain:'nhaclient.herokuapp.com'
+            maxAge:1000*60*60*24*5
         }
 
         //Successfully loges in
         var payload = {
             status:"Sucess",
+            authToken:token,
             code: 200,
             login: true,
             message:{
