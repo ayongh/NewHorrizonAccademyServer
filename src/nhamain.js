@@ -25,6 +25,7 @@ var sendError = require('./middle_ware/emailError')
 var Log = require("./routes/log")
 
 
+var gethost=process.env.SWAGGERHOST
 dotenv.config();
 let options = {
     swaggerDefinition: {
@@ -33,7 +34,7 @@ let options = {
             title: 'Swagger',
             version: '1.0.0',
         },
-        host: 'nhaserver.herokuapp.com',
+        host: gethost,
         basePath: '/',
         produces: [
             "application/json",
