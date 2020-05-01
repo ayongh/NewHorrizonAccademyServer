@@ -111,7 +111,6 @@ router.post('/',schema, async (req, res) =>
         const token  = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET, {expiresIn: "5 days"} )
 
         const cookieOptions = {
-            domain:".localhost:3000",
             httpOnly: true,
             maxAge:1000*60*60*24*5
         }
