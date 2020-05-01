@@ -113,7 +113,7 @@ router.post('/',schema, async (req, res) =>
         const cookieOptions = {
             httpOnly: true,
             maxAge:1000*60*60*24*5,
-            domain:'.nhaclient.herokuapp.com'
+            domain:'nhaclient.herokuapp.com'
         }
 
         //Successfully loges in
