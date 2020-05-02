@@ -118,7 +118,6 @@ router.post('/',schema, async (req, res) =>
         //Successfully loges in
         var payload = {
             status:"Sucess",
-            authToken:token,
             code: 200,
             login: true,
             message:{

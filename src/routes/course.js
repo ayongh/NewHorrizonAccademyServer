@@ -32,7 +32,6 @@ var loger = require('../logger/logger');
 */
 router.get('/all',verify, async(req, res) =>{
     var starttime = process.hrtime();
-
    try {
         const allClass = await Class.find()
         var payload = 
