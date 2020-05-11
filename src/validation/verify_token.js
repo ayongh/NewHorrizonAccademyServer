@@ -8,7 +8,6 @@ module.exports = async function (req, res, next)
 {
     var starttime = process.hrtime();
 
-    console.log(req)
     const token = req.cookies.authToken;
 
     if (!token) {

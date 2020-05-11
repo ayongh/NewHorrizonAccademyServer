@@ -77,7 +77,6 @@ module.exports.log = function (req,res,status,message,payload, starttime) {
 
         dbo.collection("log").insertOne(logData, function(err, res) {
             if (err) throw err;
-            console.log("1 document inserted");
             client.close()
         });
         

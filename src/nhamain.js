@@ -23,7 +23,7 @@ const WelcomePage = require('./routes/welcome')
 const Recomendation = require('./routes/recomendation')
 var sendError = require('./middle_ware/emailError')
 var Log = require("./routes/log")
-
+var classRender = require("./routes/renderclass")
 
 var gethost=process.env.SWAGGERHOST
 dotenv.config();
@@ -100,7 +100,8 @@ app.use('/token/validation', token_validation);
 app.use('/recomendation',Recomendation);
 
 app.use('/course', Course);
-app.use('/class', class_create);
+app.use('/render/class', classRender);
+app.use('/course/create', class_create);
 app.use('/section', section_create);
 app.use('/log', Log);
 

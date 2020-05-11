@@ -32,10 +32,10 @@ const ClassSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    actors:
+    date:
     {
-        type: String,
-        required: true,
+        type:Date,
+        default: Date.now
     }
 
 });
