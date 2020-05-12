@@ -275,7 +275,7 @@ router.post('/like/remove',verify, async(req, res) =>{
     }
 
     payload = {message:ratingExist}
-    loger.log(req,res,404,"Sucessfully removed a rating", payload,starttime)
+    loger.log(req,res,200,"Sucessfully removed a rating", payload,starttime)
     res.status(200).send(payload)    
 })
 
