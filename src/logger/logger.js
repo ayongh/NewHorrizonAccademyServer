@@ -67,6 +67,7 @@ module.exports.log = function (req,res,status,message,payload, starttime) {
             timestamp:date,
             errorLevel: level, 
             message:Message, 
+            status:status,
             reqHeader:req.headers, 
             identifier:identifier, 
             method:method, 
