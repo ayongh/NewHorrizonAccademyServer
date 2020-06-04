@@ -17,24 +17,6 @@ const sectionSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    
-    thumbnail:
-    {
-        type: String,
-        required: true
-    },
-
-    season:
-    {
-        type: Number,
-        required: true
-    },
-
-    episode:
-    {
-        type: Number,
-        required: true
-    },
 
     videoUrl:
     {

@@ -6,6 +6,7 @@ const Class = require('../model/class_model');
 const Section = require('../model/show_episode')
 const User = require('../model/User_model');
 const Rating = require('../model/rating_model')
+const Categorie = require('../model/categorie')
 
 var loger = require('../logger/logger');
 
@@ -49,6 +50,28 @@ router.get('/all',verify, async(req, res) =>{
         loger.log(req,res,500,error, payload,starttime)
         res.status(500).send(payload)
    }
+    
+})
+
+router.get('/getCategorie',verify, async(req, res) =>{
+
+    const categories = await Categorie.find()
+
+    res.status(200).send({data:categories})
+    
+})
+
+router.get('/insertCategorie',verify, async(req, res) =>{
+
+    var categorie = "Entertainment"
+
+    const categorieModel = new Categorie({
+        categorie:categorie
+    })
+
+    const savedCategorie = await categorieModel.save();
+
+    res.status(200).send({data:savedCategorie})
     
 })
 

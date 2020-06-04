@@ -76,10 +76,10 @@ module.exports.log = function (req,res,status,message,payload, starttime) {
             executiontime:executiontime
         }
 
-        dbo.collection("log").insertOne(logData, function(err, res) {
-            if (err) throw err;
-            client.close()
-        });
+        // dbo.collection("log").insertOne(logData, function(err, res) {
+        //     if (err) throw err;
+        //     client.close()
+        // });
         
             
     })

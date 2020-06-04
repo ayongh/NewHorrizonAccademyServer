@@ -62,7 +62,6 @@ router.post('/popular',verify, async(req, res) =>{
         
         var sortedrating= ratings.sort(compare)
 
-        console.log(sortedrating)
         var classes = await Class.find().where('_id').in(sortedrating.slice(0,pagination)).exec()
 
         if(!classes)
