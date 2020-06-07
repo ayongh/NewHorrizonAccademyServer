@@ -113,8 +113,9 @@ router.post('/',schema, async (req, res) =>
 
         const cookieOptions = {
             httpOnly:true,
-            domain:'nhalearn.online',
             SameSite:true,
+            path:"/",
+            secure:false,
             maxAge:1000*60*60*24*5,
         }
 
