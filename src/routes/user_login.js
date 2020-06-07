@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const axios = require('axios');
+var cookie = require('cookie');
 
 const User = require('../model/User_model');
 const bcrypt = require('bcryptjs');
@@ -111,8 +112,9 @@ router.post('/',schema, async (req, res) =>
         const token  = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET, {expiresIn: "5 days"} )
 
         const cookieOptions = {
-            httpOnly: true,
-            maxAge:1000*60*60*24*5
+            path:'/',
+            domain:'.nhalearn.online',
+            maxAge:1000*60*60*24*5,
         }
 
         //Successfully loges in
@@ -120,6 +122,7 @@ router.post('/',schema, async (req, res) =>
             status:"Sucess",
             code: 200,
             login: true,
+            token: token,
             message:{
                 watchHistory: user.watchHistory,
                 firstName: user.firstName,
@@ -128,6 +131,9 @@ router.post('/',schema, async (req, res) =>
             }
         }
 
+        res.setHeader('Set-Cookie', cookie.serialize('name', token, cookieOptions));
+
+        console.log(token)
         loger.log(req,res,200,{message:"sucessfully loged in", cookie:token},payload, starttime)
         res.cookie('authToken', token, cookieOptions).status(200).send(payload)
         
