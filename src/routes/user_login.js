@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const axios = require('axios');
-var cookie = require('cookie');
+var cookieabc = require('cookie');
 
 const User = require('../model/User_model');
 const bcrypt = require('bcryptjs');
@@ -113,7 +113,7 @@ router.post('/',schema, async (req, res) =>
 
         const cookieOptions = {
             path:'/',
-            domain:'nhalearn.online',
+            domain:'*.nhalearn.online',
             maxAge:1000*60*60*24*5,
         }
 
@@ -131,9 +131,7 @@ router.post('/',schema, async (req, res) =>
             }
         }
 
-        res.setHeader('Set-Cookie', cookie.serialize('name', token, cookieOptions));
-
-        console.log(token)
+        res.setHeader('Set-Cookie', cookieabc.serialize('name', token, cookieOptions));
         loger.log(req,res,200,{message:"sucessfully loged in", cookie:token},payload, starttime)
         res.cookie('authToken', token, cookieOptions).status(200).send(payload)
         
