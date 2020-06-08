@@ -113,7 +113,7 @@ router.post('/',schema, async (req, res) =>
 
         const cookieOptions = {
             httpOnly:true,
-            SameSite:true,
+            sameSite:true,
             path:"/",
             secure:false,
             maxAge:1000*60*60*24*5,
@@ -133,7 +133,6 @@ router.post('/',schema, async (req, res) =>
             }
         }
 
-        res.setHeader('Set-Cookie', cookieabc.serialize('name', token, {domain:'.nhalearn.online'}));
         loger.log(req,res,200,{message:"sucessfully loged in", cookie:token},payload, starttime)
         res.cookie('authToken', token, cookieOptions).status(200).send(payload)
         
