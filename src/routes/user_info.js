@@ -56,17 +56,14 @@ router.post('/update/email',emailschema,validate, async (req, res) =>
     }
  
     //Create and assign web token
-    const token  = jwt.sign({data: payload}, process.env.TOKEN_SECRET,{expiresIn: 300})
-
-    const cookieOptions = {
-        httpOnly: true,
-    }
+    const token  = jwt.sign({data: payload}, process.env.TOKEN_SECRET,{expiresIn: '1 days'})
  
     //Send email using node mailer
     sendVerificationCode.sendVarificationCode(secret.base32, req.body.email ,res)
 
-    res.cookie('emailupdate',token, cookieOptions).status(200).send({
-        message:"sucessfully validated"
+    res.status(200).send({
+        message:"sucessfully validated",
+        token: token
     })
 });
 
@@ -107,7 +104,7 @@ router.post('/update/emailValidation',verifyEmailToken,validate, async (req, res
     }
 
 
-    res.clearCookie('emailupdate').status(200).send({
+    res.status(200).send({
         message:newUpdateEmail
     })
 });

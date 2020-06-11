@@ -2,12 +2,11 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
-var cookieParser = require('cookie-parser');
+var cookieParser = require('cookie-parser'); //under obesrvation
 var bodyParser = require('body-parser')
+const morgan = require('morgan')
 
 const expressSwagger = require('express-swagger-generator')(app);
-
-
 
 //import Routes 
 const Course = require('./routes/course');
@@ -56,6 +55,7 @@ let options = {
 expressSwagger(options)
 
 //Middle ware
+app.use(morgan('tiny'))
 app.use(express.json())
 app.use(cookieParser());
 app.use(bodyParser.json())

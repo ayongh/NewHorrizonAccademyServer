@@ -142,7 +142,12 @@ router.post('/watchHistory',verify, async(req, res) =>{
         pagination = req.body.pagination
     }
 
-    var token = req.cookies.authToken;
+    const bearertoken = req.headers.authorization;
+
+    const sliceToken = bearertoken.split(" ")
+
+    const token = sliceToken[1]    
+    
     var decodedToken = jwtDecode(token)
     var userID = decodedToken._id
 

@@ -184,7 +184,12 @@ router.post('/like',verify, async(req, res) =>{
     var starttime = process.hrtime();
 
     const classID = req.body.classID
-    var token = req.cookies.authToken;
+
+    const bearertoken = req.headers.authorization;
+
+    const sliceToken = bearertoken.split(" ")
+
+    const token = sliceToken[1]
 
     var decoded = jwtDecode(token);
 
@@ -268,7 +273,12 @@ router.post('/like/remove',verify, async(req, res) =>{
     var starttime = process.hrtime();
 
     const classID = req.body.classID
-    var token = req.cookies.authToken;
+    
+    const bearertoken = req.headers.authorization;
+
+    const sliceToken = bearertoken.split(" ")
+
+    const token = sliceToken[1]
 
     var decoded = jwtDecode(token);
 
@@ -374,7 +384,11 @@ router.post('/dislike',verify, async(req, res) =>{
 */
 router.get('/listrating',verify, async(req, res) =>{
 
-    var token = req.cookies.authToken;
+    const bearertoken = req.headers.authorization;
+
+    const sliceToken = bearertoken.split(" ")
+
+    const token = sliceToken[1]
 
     var decoded = jwtDecode(token);
 

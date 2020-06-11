@@ -8,7 +8,16 @@ const verifyPswd = require('../validation/verify_pswdReset_token')
   
 router.get('/',verify, async (req, res) =>
 {
-    var token = req.cookies.authToken;
+    if(req.headers.authorization === undefined)
+    {
+        return res.status(403).send({error : "undefined authorization token"})
+    }
+
+    const bearertoken = req.headers.authorization;
+    const sliceToken = bearertoken.split(" ")
+
+    const token = sliceToken[1]    
+
     var decodedToken = jwtDecode(token)
     var userID = decodedToken._id
 

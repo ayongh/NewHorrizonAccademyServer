@@ -8,8 +8,16 @@ module.exports = async function (req, res, next)
 {
     var starttime = process.hrtime();
 
-    console.log(req)
-    const token = req.cookies.authToken;
+    if(req.headers.authorization === undefined)
+    {
+        return res.status(403).send({error : "undefined authorization token"})
+    }
+    
+    const bearertoken = req.headers.authorization;
+
+    const sliceToken = bearertoken.split(" ")
+
+    const token = sliceToken[1]
 
     if (!token) {
         var payload = {
@@ -46,7 +54,7 @@ module.exports = async function (req, res, next)
             error:'auth invalid Token'       
         }
         loger.log(req,res,500,err,payload,starttime)
-        res.status(500).send()
+        res.status(500).send({error: "invalid token access denied"})
     }
 
 }

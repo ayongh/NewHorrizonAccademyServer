@@ -111,14 +111,6 @@ router.post('/',schema, async (req, res) =>
         //Create and assign web token
         const token  = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET, {expiresIn: "5 days"} )
 
-        const cookieOptions = {
-            httpOnly:true,
-            sameSite:true,
-            path:"/",
-            secure:false,
-            maxAge:1000*60*60*24*5,
-        }
-
         //Successfully loges in
         var payload = {
             status:"Sucess",
@@ -134,7 +126,7 @@ router.post('/',schema, async (req, res) =>
         }
 
         loger.log(req,res,200,{message:"sucessfully loged in", cookie:token},payload, starttime)
-        res.cookie('authToken', token, cookieOptions).status(200).send(payload)
+        res.status(200).send(payload)
         
     } catch (error) {
 
@@ -170,6 +162,7 @@ router.post('/',schema, async (req, res) =>
 */
 router.post('/recaptcha', async (req, res) =>
 {
+    console.log("recaptcha")
     if(req.body.token === undefined)
     {
         var payload= {
