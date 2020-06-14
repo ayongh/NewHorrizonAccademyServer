@@ -14,9 +14,7 @@ module.exports = async function (req, res, next)
     }
     
     const bearertoken = req.headers.authorization;
-
     const sliceToken = bearertoken.split(" ")
-
     const token = sliceToken[1]
 
     if (!token) {

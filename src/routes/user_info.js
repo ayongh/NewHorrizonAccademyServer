@@ -69,12 +69,20 @@ router.post('/update/email',emailschema,validate, async (req, res) =>
 
 router.post('/update/emailValidation',verifyEmailToken,validate, async (req, res) =>
 {
-    var authToken = req.cookies.authToken;
+    const authbearertoken = req.headers.authorization;
+    const authsliceToken = authbearertoken.split(" ")
+    const authtoken = authsliceToken[1]
+
+    var authToken = authtoken;
     var decodedAuthToken = jwtDecode(authToken)
     var userID = decodedAuthToken._id
 
 
-    var emailUpdateToken = req.cookies.emailupdate
+    const emailbearertoken = req.headers.eauthorization;
+    const emailsliceToken = emailbearertoken.split(" ")
+    const emailtoken = emailsliceToken[1]
+
+    var emailUpdateToken = emailtoken
     var decodedemailUpdateToken = jwtDecode(emailUpdateToken)
 
     var emailUpdateValidationKey = decodedemailUpdateToken.data.authCode
@@ -127,8 +135,10 @@ router.post('/update/name',validate,schema, async (req, res) =>
         return res.status(422).json({ error: "Make sure your first and lastname is valid"});
     }
 
+    const bearertoken = req.headers.authorization;
+    const sliceToken = bearertoken.split(" ")
+    const token = sliceToken[1]
 
-    var token = req.cookies.authToken;
     var decodedToken = jwtDecode(token)
     var userID = decodedToken._id
 
@@ -185,7 +195,10 @@ router.post('/update/watchLater',validate, async (req, res) =>
         return res.status(403).send({error:"ClassId is not object ID"})
     }
     
-    var token = req.cookies.authToken;
+    const bearertoken = req.headers.authorization;
+    const sliceToken = bearertoken.split(" ")
+    const token = sliceToken[1]
+
     var decodedToken = jwtDecode(token)
     var userID = decodedToken._id
 
@@ -251,7 +264,10 @@ router.post('/update/watchLater/remove',validate, async (req, res) =>
         return res.status(403).send({error:"ClassId is not object ID"})
     }
     
-    var token = req.cookies.authToken;
+  const bearertoken = req.headers.authorization;
+    const sliceToken = bearertoken.split(" ")
+    const token = sliceToken[1]
+    
     var decodedToken = jwtDecode(token)
     var userID = decodedToken._id
 

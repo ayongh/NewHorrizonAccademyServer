@@ -92,20 +92,12 @@ router.post('/',schema, verifyJWT, async (req, res) =>
     return res.status(422).send(payload)
   }
   
-  //Then Checks the cookie called signup to validate the secret key initiated in the /emailverification
-  if(req.cookies.signup=== undefined)
-  {
-    var payload = 
-    {
-      errors:"signup cookie is not available", 
-      errorcode:400
-    }
+  const bearertoken = req.headers.authorization;
+  const sliceToken = bearertoken.split(" ")
+  const token = sliceToken[1]
 
-    loger.log(req,res,400,payload.errors,payload,starttime)
-    return res.status(400).send()
-  }
 
-  const decodedjwt = jwt.verify(req.cookies.signup, process.env.TOKEN_SECRET)
+  const decodedjwt = jwt.verify(token, process.env.TOKEN_SECRET)
   const match = await bcrypt.compare(req.body.userInputedCode, decodedjwt.key);
 
   if(!match) 
@@ -138,21 +130,26 @@ router.post('/',schema, verifyJWT, async (req, res) =>
       var payload = {
         code: 403,
         login: true,
-        message:"Sucessfully Created User"
+        message:"Failed to Create User"
       }
       loger.log(req,res,403,payload.message,payload,starttime)
       return res.status(403).send(payload)
     }
+
+    console.log(savedUser)
+
+    const loginToken  = jwt.sign({_id: savedUser._id}, process.env.TOKEN_SECRET, {expiresIn: "5 days"} )
 
     //Successfully loges in
 
     var payload = {
       code: 200,
       login: true,
+      loginToken:loginToken,
       message:"Sucessfully Created User"
     }
     loger.log(req,res,200,payload.message,payload,starttime)
-    res.clearCookie("signup").status(200).send(payload)
+    res.status(200).send(payload)
   } 
   catch(err)
   {
@@ -223,14 +220,11 @@ router.post('/emailvarification', schema, async (req, res) =>
   sendVerificationCode.sendVarificationCode(secret.base32, req.body.email ,res)
 
   //Create and assign web token
-  const token  = jwt.sign({key: hashedSecret}, process.env.TOKEN_SECRET, {expiresIn: "5 days"} )
+  const token  = jwt.sign({key: hashedSecret}, process.env.TOKEN_SECRET, {expiresIn: "1 days"} )
 
-  const cookieOptions = {
-    httpOnly: true,
-    maxAge:1000*60*60*10
-  }
 
   var payload = {
+    token: token,
     firstName: req.body.fname,
     lastName: req.body.lname,
     email: req.body.email,
@@ -239,7 +233,7 @@ router.post('/emailvarification', schema, async (req, res) =>
   }
 
   loger.log(req,res,200,"Sucessfully sent a secretkey and validation",payload,starttime)
-  res.cookie('signup', token, cookieOptions).status(200).send(payload)
+  res.status(200).send(payload)
 })
 
 

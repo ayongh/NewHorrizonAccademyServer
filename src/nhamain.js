@@ -65,7 +65,7 @@ app.use(bodyParser.json())
 app.use(function(req, res, next) {
     var allowedOrigin = ['https://nhaclient.herokuapp.com','https://ancient-plateau-56456.herokuapp.com','http://localhost:3000', 'http://nhaclient.herokuapp.com' , 'http://www.nhalearn.online']
     var headersReq = req.headers.origin;
-    console.log(headersReq)
+
     if(allowedOrigin.indexOf(headersReq) > -1)
     {
         res.header("Access-Control-Allow-Origin", headersReq);

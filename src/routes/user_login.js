@@ -162,7 +162,6 @@ router.post('/',schema, async (req, res) =>
 */
 router.post('/recaptcha', async (req, res) =>
 {
-    console.log("recaptcha")
     if(req.body.token === undefined)
     {
         var payload= {

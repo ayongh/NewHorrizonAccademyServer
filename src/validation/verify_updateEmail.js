@@ -2,7 +2,10 @@ const jwt = require('jsonwebtoken')
 
 module.exports = function (req, res, next)
 {
-    const token = req.cookies.emailupdate;
+
+    const bearertoken = req.headers.eauthorization;
+    const sliceToken = bearertoken.split(" ")
+    const token = sliceToken[1]
 
     if (!token) return res.status(401).send({error:'Access deniened'})
 
