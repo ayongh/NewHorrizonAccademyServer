@@ -29,7 +29,7 @@
     "mongose": "0.0.2-security",
     "morgan": "^1.10.0",
     "ms": "^2.1.2",
-    "nodemailer": "^6.4.2",
+    "nodemailer": "^6.4.16",
     "nodemon": "^2.0.2",
     "speakeasy": "^2.0.0"
   },
